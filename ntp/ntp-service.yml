@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: ntp
+  name: ntp
+  namespace: home-apps
+spec:
+  type: NodePort
+  selector:
+    home.apps.service: ntp # home.apps.service=ntpのpod
+  ports:
+    - name: "ntp-123"
+      port: 123
+      targetPort: 123
+      nodePort: 123
+      protocol: UDP
+    - name: "ntp-323"
+      port: 323
+      targetPort: 323
+      nodePort: 323
+      protocol: UDP

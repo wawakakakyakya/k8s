@@ -1,13 +1,14 @@
 # all: all-test export-all-coverage
 
 ns := home-apps
+com := apply
 
 build_registry:
-	kubectl apply -f registry/registry-service.yml
-	kubectl apply -f registry/registry-deployment.yml
+	kubectl ${com} -f registry/registry-service.yml
+	kubectl ${com} -f registry/registry-deployment.yml
 
 build_ns:
-	kubectl apply -f namespace/namespace.yml
+	kubectl ${com} -f namespace/namespace.yml
 
 build: build_ns build_certs build_registry
 
@@ -16,4 +17,12 @@ build_certs:
 	--from-file=certs/certs.d/fullchain.pem \
 	--from-file=certs/certs.d/privatekey.pem \
 	--dry-run -o yaml | tee certs/home-certs-configmap.yml
-	kubectl apply -f certs/home-certs-configmap.yml
+	kubectl ${com} -f certs/home-certs-configmap.yml
+
+build_ntp:
+	kubectl create configmap ntp-conf -n ${ns} \
+	--from-file=ntp/chrony.conf \
+	--dry-run -o yaml | tee ntp/ntp-conf-configmap.yml
+	kubectl ${com} -f ntp/ntp-conf-configmap.yml
+	kubectl ${com} -f ntp/ntp-service.yml
+	kubectl ${com} -f ntp/ntp-deployment.yml
