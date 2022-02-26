@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: registry
+  name: registry
+  namespace: home-apps
+spec:
+  type: NodePort
+  selector:
+    home.apps.service: registry # home.apps.service=registryのpod
+  ports:
+    - name: registry
+      port: 30080
+      targetPort: 5000
+      nodePort: 30080
