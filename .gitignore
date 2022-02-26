@@ -4,3 +4,8 @@ certs/certs.d
 certs/home-certs-configmap.yml
 
 registry/certs.d
+
+#dns
+dns/conf.d/Corefile
+dns/conf.d/*hosts
+dns/dns-conf-configmap.yml

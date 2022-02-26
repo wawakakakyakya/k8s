@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  Corefile: |
+    (common) {
+        cache 1800
+        errors
+        loop
+    }
+
+    . {
+        hosts /etc/coredns/hosts example.com {
+            reload 60s
+            fallthrough
+        }
+
+        forward . 8.8.8.8
+        import common
+        prometheus 0.0.0.0:9153
+    }
+  hosts: |+
+    192.168.1.1    hostname          test.example.com
+
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: dns-conf
+  namespace: home-apps
