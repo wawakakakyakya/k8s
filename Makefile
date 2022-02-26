@@ -3,7 +3,6 @@
 ns := home-apps
 
 build_registry:
-	kubectl apply -f registry/registry-certs-configmap.yml
 	kubectl apply -f registry/registry-service.yml
 	kubectl apply -f registry/registry-deployment.yml
 
@@ -17,3 +16,4 @@ build_certs:
 	--from-file=certs/certs.d/fullchain.pem \
 	--from-file=certs/certs.d/privatekey.pem \
 	--dry-run -o yaml | tee certs/home-certs-configmap.yml
+	kubectl apply -f certs/home-certs-configmap.yml
