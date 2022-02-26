@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: dns
+  name: dns
+  namespace: home-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      home.apps.service: dns
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        home.apps.service: dns
+    spec:
+      hostname: dns
+      restartPolicy: Always
+      containers:
+        - image: localhost:30080/dns
+          name: dns
+          ports:
+            - containerPort: 53
+              protocol: UDP
+          resources: {}
+          volumeMounts:
+            - name: dns-conf
+              mountPath: /etc/coredns
+      volumes:
+        - name: dns-conf
+          configMap:
+            name: dns-conf # マウントしたいConfigMapの名前
+            items: # ファイルとして作成するConfigMapのキーの配列, 記載した特定のものだけをconfigmapから持ってくる
+              - key: Corefile
+                path: Corefile
+                mode: 0644
+              - key: hosts
+                path: hosts
+                mode: 0644
+
+status: {}

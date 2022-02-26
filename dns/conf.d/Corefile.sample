@@ -1,0 +1,16 @@
+(common) {
+    cache 1800
+    errors
+    loop
+}
+
+. {
+    hosts hostfile.hosts example.com {
+        reload 60s
+        fallthrough
+    }
+
+    forward . 8.8.8.8
+    import common
+    prometheus 0.0.0.0:9153
+}

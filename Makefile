@@ -26,3 +26,12 @@ build_ntp:
 	kubectl ${com} -f ntp/ntp-conf-configmap.yml
 	kubectl ${com} -f ntp/ntp-service.yml
 	kubectl ${com} -f ntp/ntp-deployment.yml
+
+build_dns:
+	kubectl create configmap dns-conf -n ${ns} \
+	--from-file=dns/conf.d/Corefile \
+	--from-file=dns/conf.d/hosts \
+	--dry-run -o yaml | tee dns/dns-conf-configmap.yml
+	kubectl ${com} -f dns/dns-conf-configmap.yml
+	kubectl ${com} -f dns/dns-service.yml
+	kubectl ${com} -f dns/dns-deployment.yml
