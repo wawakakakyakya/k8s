@@ -1,5 +1,6 @@
 .vscode
 .devcontainer
 certs/certs.d
+certs/home-certs-configmap.yml
 
 registry/certs.d
