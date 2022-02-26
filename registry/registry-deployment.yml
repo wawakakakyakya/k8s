@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: registry
+  name: registry
+  namespace: home-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      home.apps.service: registry
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        home.apps.service: registry
+    spec:
+      hostname: registry
+      restartPolicy: Always
+      containers:
+        - image: registry:latest
+          name: registry
+          env:
+            - name: REGISTRY_HTTP_TLS_CERTIFICATE
+              value: /etc/docker/certs.d/fullchain.pem
+            - name: REGISTRY_HTTP_TLS_KEY
+              value: /etc/docker/certs.d/privatekey.pem
+          ports:
+            - containerPort: 5000
+          resources: {}
+          volumeMounts:
+            - name: registry-certs
+              mountPath: /etc/docker/certs.d # configmapに記載したファイルのマウント先
+      volumes:
+        - name: registry-certs
+          configMap:
+            name: home-certs # マウントしたいConfigMapの名前
+            items: # ファイルとして作成するConfigMapのキーの配列, 記載した特定のものだけをconfigmapから持ってくる
+              - key: fullchain.pem
+                path: fullchain.pem
+                mode: 0644
+              - key: privatekey.pem
+                path: privatekey.pem
+                mode: 0644
+status: {}
