@@ -2,6 +2,7 @@
 .devcontainer
 certs/certs.d
 certs/home-certs-configmap.yml
+secrets/*.yml
 
 registry/certs.d
 
