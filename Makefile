@@ -19,6 +19,10 @@ build_certs:
 	--dry-run -o yaml | tee certs/home-certs-configmap.yml
 	kubectl ${com} -f certs/home-certs-configmap.yml
 
+build_secret:
+	kubectl create secret generic dotenv --from-env-file=.env --dry-run=client -o yaml | tee secrets/dotenv-secret.yml
+	kubectl apply -f secrets/dotenv-secret.yml
+
 build_ntp:
 	kubectl create configmap ntp-conf -n ${ns} \
 	--from-file=ntp/chrony.conf \
