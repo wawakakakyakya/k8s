@@ -39,3 +39,22 @@ build_dns:
 	kubectl ${com} -f dns/dns-conf-configmap.yml
 	kubectl ${com} -f dns/dns-service.yml
 	kubectl ${com} -f dns/dns-deployment.yml
+
+build_mysql: build_secret
+	kubectl create configmap mysql-conf -n ${ns} \
+	--from-file=mysql/my.cnf \
+	--dry-run -o yaml | tee mysql/mysql-conf-configmap.yml
+	kubectl create secret generic initdb-d --from-file=mysql/initdb.d/initdb.sql \
+	--dry-run=client -o yaml | tee mysql/initdb-secret.yml
+	kubectl ${com} -f mysql/initdb-secret.yml
+	kubectl ${com} -f mysql/mysql-conf-configmap.yml
+	kubectl ${com} -f mysql/mysql-service.yml
+	kubectl ${com} -f mysql/mysql-deployment.yml
+build_dhcp:
+	kubectl create configmap dhcp-conf -n ${ns} \
+	--from-file=dhcp/conf.d/Corefile \
+	--from-file=dhcp/conf.d/hosts \
+	--dry-run -o yaml | tee dns/dhcp-conf-configmap.yml
+	kubectl ${com} -f dhcp/dhcp-conf-configmap.yml
+	kubectl ${com} -f dhcp/dhcp-service.yml
+	kubectl ${com} -f dhcp/dhcp-deployment.yml

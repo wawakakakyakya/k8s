@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: mysql
+  name: mysql
+  namespace: home-apps
+spec:
+  type: NodePort
+  selector:
+    home.apps.service: mysql # home.apps.service=mysqlのpod
+  ports:
+    - name: "mysql"
+      port: 30000
+      targetPort: 30000
+      nodePort: 30000
+      protocol: TCP
