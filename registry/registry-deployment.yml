@@ -29,6 +29,8 @@ spec:
               value: /etc/docker/certs.d/fullchain.pem
             - name: REGISTRY_HTTP_TLS_KEY
               value: /etc/docker/certs.d/privatekey.pem
+            - name: REGISTRY_STORAGE_DELETE_ENABLED
+              value: "true"
           ports:
             - containerPort: 5000
           resources: {}
