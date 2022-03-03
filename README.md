@@ -1,2 +1,2 @@
 # k8s
-k8s settins 
+k8s manifests
