@@ -10,3 +10,8 @@ registry/certs.d
 dns/conf.d/Corefile
 dns/conf.d/*hosts
 dns/dns-conf-configmap.yml
+
+# mysql
+mysql/initdb.d
+mysql/my.cnf
+mysql/mysql-conf-configmap.yml
