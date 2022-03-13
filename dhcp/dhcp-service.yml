@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: dhcp
+  name: dhcp
+  namespace: home-apps
+spec:
+  type: NodePort
+  selector:
+    home.apps.service: dhcp # home.apps.service=dhcpのpod
+  ports:
+    - name: "dhcp-67"
+      port: 67
+      targetPort: 67
+      nodePort: 67
+      protocol: UDP
