@@ -50,3 +50,11 @@ build_mysql: build_secret
 	kubectl ${com} -f mysql/mysql-conf-configmap.yml
 	kubectl ${com} -f mysql/mysql-service.yml
 	kubectl ${com} -f mysql/mysql-deployment.yml
+
+build_dhcp:
+	kubectl create configmap dhcp-conf -n ${ns} \
+	--from-file=dhcp/dhcpd.conf \
+	--dry-run -o yaml | tee dhcp/dhcp-conf-configmap.yml
+	kubectl ${com} -f dhcp/dhcp-conf-configmap.yml
+	kubectl ${com} -f dhcp/dhcp-service.yml
+	kubectl ${com} -f dhcp/dhcp-deployment.yml

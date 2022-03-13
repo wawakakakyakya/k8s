@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    home.apps.service: dhcp
+  name: dhcp
+  namespace: home-apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      home.apps.service: dhcp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        home.apps.service: dhcp
+    spec:
+      hostname: dhcp
+      restartPolicy: Always
+      containers:
+        - image: localhost:30080/dhcp
+          name: dhcp
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 67
+              protocol: UDP
+          volumeMounts:
+            - name: dhcp-conf
+              mountPath: /etc/dhcp
+      volumes:
+        - name: dhcp-conf
+          configMap:
+            name: dhcp-conf # マウントしたいConfigMapの名前
+            items: # ファイルとして作成するConfigMapのキーの配列, 記載した特定のものだけをconfigmapから持ってくる
+              - key: dhcpd.conf
+                path: dhcpd.conf
+                mode: 0644
+
+status: {}

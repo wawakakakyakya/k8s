@@ -15,3 +15,7 @@ dns/dns-conf-configmap.yml
 mysql/initdb.d
 mysql/my.cnf
 mysql/mysql-conf-configmap.yml
+
+# dhcp
+dhcp/dhcp-conf-configmap.yml
+dhcp/dhcpd.conf
