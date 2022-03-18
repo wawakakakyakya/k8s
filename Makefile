@@ -2,10 +2,29 @@
 
 ns := home-apps
 com := apply
+network := 10.0.0.0/24
 
-build_registry:
-	kubectl ${com} -f registry/registry-service.yml
-	kubectl ${com} -f registry/registry-deployment.yml
+setup:
+	$(MAKE) init
+	$(MAKE) flannel
+	$(MAKE) pod_on_master
+
+init:
+	kubeadm init
+	# kubeadm init --pod-network-cidr=${network}
+	mkdir -p ${HOME}/.kube
+	sudo cp -i /etc/kubernetes/admin.conf ${HOME}/.kube/config
+	sudo chown $(id -u):$(id -g) ${HOME}/.kube/config
+
+flannel:
+	curl -L https://github.com/coreos/flannel/raw/master/Documentation/kube-flannel.yml -o /etc/kubernetes/manifests/flannel.yml
+	kubectl apply -f /etc/kubernetes/manifests/flannel.yml
+
+pod_on_master:
+	kubectl taint nodes ${HOSTNAME} node-role.kubernetes.io/master:NoSchedule-
+
+reset:
+	kubeadm reset
 
 build_ns:
 	kubectl ${com} -f namespace/namespace.yml
@@ -18,6 +37,10 @@ build_certs:
 	--from-file=certs/certs.d/privatekey.pem \
 	--dry-run -o yaml | tee certs/home-certs-configmap.yml
 	kubectl ${com} -f certs/home-certs-configmap.yml
+
+build_registry: build_ns build_certs
+	kubectl ${com} -f registry/registry-service.yml
+	kubectl ${com} -f registry/registry-deployment.yml
 
 build_secret:
 	kubectl create secret generic dotenv --from-env-file=.env --dry-run=client -o yaml | tee secrets/dotenv-secret.yml
